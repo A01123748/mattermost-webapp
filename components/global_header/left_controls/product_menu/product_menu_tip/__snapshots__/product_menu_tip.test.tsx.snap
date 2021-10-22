@@ -3,8 +3,7 @@
 exports[`components/product_switcher/product_switcher_tip matches snapshot with default props 1`] = `
 <Connect(TutorialTip)
   overlayClass="tip-overlay--product-switcher"
-  placement="bottom"
-  punchOut={null}
+  placement="right"
   screens={
     Array [
       <div>

@@ -1,11 +1,8 @@
 @charset 'UTF-8';
 
-$backdrop-index: 999;
-$tip-index: 1000;
-
 .tip-backdrop {
     position: absolute;
-    z-index: $backdrop-index;
+    z-index: 999;
     top: 0;
     left: 0;
     width: 100%;
@@ -17,7 +14,7 @@ $tip-index: 1000;
     @include border-radius(3px);
 
     position: absolute;
-    z-index: $tip-index;
+    z-index: 1000;
     width: 350px;
     max-width: 90%;
     padding: 20px;
@@ -65,7 +62,7 @@ $tip-index: 1000;
         margin: 10px 0 0 10px;
 
         .arrow {
-            top: 34px;
+            top: 15px;
             left: -10px;
             border-right-color: $white;
             border-left-width: 0;
@@ -73,7 +70,7 @@ $tip-index: 1000;
 
         &.tip-overlay--header--heading {
             .arrow {
-                top: 40px;
+                top: 45px;
             }
         }
     }
@@ -92,7 +89,6 @@ $tip-index: 1000;
 
     &.tip-overlay--chat {
         margin-top: -10px;
-        box-shadow: var(--elevation-2);
 
         .arrow {
             bottom: -10px;
@@ -100,12 +96,6 @@ $tip-index: 1000;
             border-top-color: var(--center-channel-bg);
             border-bottom-width: 0;
             margin-left: -10px;
-            // given the tip can be placed over a which punchout, this provides
-            // the needed shadow. Can't do it with ordinary box-shadow because
-            // we're missing with the box definitions by making a triangle.
-            // Thanks, https://stackoverflow.com/a/39439751 !
-            -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.12));
-            filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.12));
         }
     }
 
@@ -113,7 +103,7 @@ $tip-index: 1000;
         margin-left: 10px;
 
         .arrow {
-            top: 82px;
+            top: 87px;
             left: -10px;
             border-right-color: $white;
             border-left-width: 0;
@@ -127,19 +117,19 @@ $tip-index: 1000;
     }
 
     &.tip-overlay--product-switcher {
-        margin-top: 10px;
         margin-left: 10px;
 
         .arrow {
-            top: -10px;
-            left: 18px;
-            border-top-width: 0;
-            border-bottom-color: $white;
+            top: 10px;
+            left: 0;
+            border-right-color: $white;
+            border-left-width: 0;
+            margin-left: -10px;
         }
     }
 
     &.tip-overlay--settings {
-        margin: 10px 10px 0 0;
+        margin-top: 10px;
 
         .arrow {
             top: -10px;
@@ -256,26 +246,15 @@ $tip-index: 1000;
     }
 
     &.tip-overlay--product-switcher {
-        z-index: $backdrop-index + 1;
         right: unset;
-        padding: 16px 0 0 20px;
+        padding: 0 4px 16px 16px;
         margin: 0;
         cursor: pointer;
-
-        .arrow {
-            top: -10px;
-            right: 44px;
-            border-top-width: 0;
-            border-bottom-color: $white;
-        }
     }
 
     &.tip-overlay--settings {
-        // needs to be over:
-        // the highest .channel-header setting
-        // the tip backdrop because it spills over the highlighted punchout
-        // needs to be underneath the tip.
-        z-index: $backdrop-index + 1;
+        // needs to be over the highest .channel-header setting
+        z-index: 16;
         top: 23px;
         right: 38px;
         padding: 10px;
@@ -352,16 +331,4 @@ $tip-index: 1000;
 
 .tutorial__app-icons {
     margin: 2em 0;
-}
-
-body.announcement-bar--fixed {
-    .tip-overlay {
-        &.tip-overlay--add-channels {
-            margin-top: $announcement-bar-height;
-        }
-
-        &.tip-overlay--header--left {
-            margin-top: 10px + $announcement-bar-height;
-        }
-    }
 }

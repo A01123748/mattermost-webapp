@@ -1,23 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useMemo} from 'react';
-import {useSelector} from 'react-redux';
+import React from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import TutorialTip from 'components/tutorial/tutorial_tip';
 import FormattedMarkdownMessage from 'components/formatted_markdown_message.jsx';
-import {getAnnouncementBarCount} from 'selectors/views/announcement_bar';
 import {TutorialSteps} from 'utils/constants';
-
-// On first render, the global header may not have painted to screen,
-// so we use this as a fallback.
-const noBarPunchout = {
-    x: '0px',
-    y: '0px',
-    width: '100%',
-    height: '40px',
-};
 
 export default function SettingsTip() {
     const screens = [
@@ -36,16 +25,6 @@ export default function SettingsTip() {
             </p>
         </div>,
     ];
-    const isAnnouncementBarOpen = useSelector(getAnnouncementBarCount) > 0;
-    const globalHeaderPunchout = useMemo(() => {
-        const headerRect = document.getElementById('global-header')?.getBoundingClientRect();
-        return headerRect ? {
-            x: `${headerRect.x}px`,
-            y: `${headerRect.y}px`,
-            width: `${headerRect.width}px`,
-            height: `${headerRect.height}px`,
-        } : noBarPunchout;
-    }, [isAnnouncementBarOpen]);
 
     return (
         <TutorialTip
@@ -54,7 +33,6 @@ export default function SettingsTip() {
             step={TutorialSteps.SETTINGS}
             overlayClass='tip-overlay--settings'
             telemetryTag='tutorial_tip_settings'
-            punchOut={globalHeaderPunchout}
         />
     );
 }

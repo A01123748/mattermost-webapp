@@ -57,16 +57,6 @@ export default class ChannelTutorialTip extends React.PureComponent<Props> {
             </div>,
         ];
 
-        const sidebarContainer = document.getElementById('sidebar-left');
-        const sidebarContainerPosition = sidebarContainer && sidebarContainer.getBoundingClientRect();
-
-        const tutorialTipPunchout = sidebarContainerPosition ? {
-            x: `${sidebarContainerPosition.x}px`,
-            y: `${sidebarContainerPosition.y}px`,
-            width: `${sidebarContainerPosition.width}px`,
-            height: `${sidebarContainerPosition.height}px`,
-        } : undefined;
-
         return (
             <TutorialTip
                 placement='right'
@@ -74,7 +64,6 @@ export default class ChannelTutorialTip extends React.PureComponent<Props> {
                 screens={screens}
                 overlayClass='tip-overlay--sidebar'
                 telemetryTag='tutorial_tip_2_channels'
-                punchOut={tutorialTipPunchout}
             />
         );
     }

@@ -28,7 +28,6 @@ import AddChannelDropdown from 'components/sidebar/add_channel_dropdown';
 
 type SidebarHeaderContainerProps = {
     menuInHeading: boolean;
-    id?: string;
 }
 
 type SidebarHeaderProps = {
@@ -194,10 +193,7 @@ const SidebarHeader: React.FC<Props> = (props: Props): JSX.Element => {
     return (
         <>
             {(showMenuTip && !hasAddChannelTreatment) ? <MenuTutorialTip onBottom={false}/> : null}
-            <SidebarHeaderContainer
-                id={'sidebar-header-container'}
-                menuInHeading={hasAddChannelTreatment}
-            >
+            <SidebarHeaderContainer menuInHeading={hasAddChannelTreatment}>
                 <OverlayTrigger
                     delayShow={Constants.OVERLAY_TIME_DELAY}
                     placement='bottom'

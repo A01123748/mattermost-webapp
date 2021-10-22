@@ -4,7 +4,7 @@
 import {TeamTypes, ThreadTypes, PostTypes, ChannelTypes} from 'mattermost-redux/action_types';
 import deepFreeze from 'mattermost-redux/utils/deep_freeze';
 
-import threadsReducer from './index';
+import threadsReducer from './threads';
 
 describe('threads', () => {
     test('RECEIVED_THREADS should update the state', () => {
@@ -12,7 +12,6 @@ describe('threads', () => {
             threadsInTeam: {},
             threads: {},
             counts: {},
-            countsIncludingDirect: {},
         });
 
         const nextState = threadsReducer(state, {
@@ -32,8 +31,7 @@ describe('threads', () => {
         expect(nextState.threads.t1).toEqual({
             id: 't1',
         });
-        expect(nextState.counts.a).toBe(state.counts.a);
-        expect(nextState.countsIncludingDirect.a).toEqual({
+        expect(nextState.counts.a).toEqual({
             total: 3,
             total_unread_threads: 0,
             total_unread_mentions: 1,
@@ -98,57 +96,6 @@ describe('threads', () => {
         });
     });
 
-    test('FOLLOW_CHANGED_THREAD should increment/decrement the total by 1', () => {
-        const state = deepFreeze({
-            threadsInTeam: {},
-            unreadThreadsInTeam: {},
-            threads: {},
-            counts: {
-                a: {
-                    total: 3,
-                    total_unread_threads: 0,
-                    total_unread_mentions: 2,
-                },
-            },
-            countsIncludingDirect: {
-                a: {
-                    total: 3,
-                    total_unread_threads: 0,
-                    total_unread_mentions: 2,
-                },
-            },
-        });
-        const nextState2 = threadsReducer(state, {
-            type: ThreadTypes.FOLLOW_CHANGED_THREAD,
-            data: {
-                team_id: 'a',
-                following: true,
-            },
-        });
-
-        expect(nextState2).not.toBe(state);
-        expect(nextState2.countsIncludingDirect.a).toEqual({
-            total: 4,
-            total_unread_threads: 0,
-            total_unread_mentions: 2,
-        });
-
-        const nextState3 = threadsReducer(state, {
-            type: ThreadTypes.FOLLOW_CHANGED_THREAD,
-            data: {
-                team_id: 'a',
-                following: false,
-            },
-        });
-
-        expect(nextState3).not.toBe(state);
-        expect(nextState3.countsIncludingDirect.a).toEqual({
-            total: 2,
-            total_unread_threads: 0,
-            total_unread_mentions: 2,
-        });
-    });
-
     test('READ_CHANGED_THREAD should update the count for thread per channel', () => {
         const state = deepFreeze({
             threadsInTeam: {
@@ -159,13 +106,6 @@ describe('threads', () => {
             },
             threads: {},
             counts: {
-                a: {
-                    total: 3,
-                    total_unread_threads: 1,
-                    total_unread_mentions: 3,
-                },
-            },
-            countsIncludingDirect: {
                 a: {
                     total: 3,
                     total_unread_threads: 1,
@@ -208,11 +148,6 @@ describe('threads', () => {
         expect(nextState3.threadsInTeam.a).toEqual(['id']);
         expect(nextState3.unreadThreadsInTeam.a).toEqual(['a', 'c']);
         expect(nextState3.counts.a).toEqual({
-            total: 3,
-            total_unread_threads: 1,
-            total_unread_mentions: 3,
-        });
-        expect(nextState3.countsIncludingDirect.a).toEqual({
             total: 3,
             total_unread_threads: 1,
             total_unread_mentions: 3,
@@ -274,7 +209,6 @@ describe('threads', () => {
                 },
             },
             counts: {},
-            countsIncludingDirect: {},
         });
 
         const nextState = threadsReducer(state, {
@@ -308,7 +242,6 @@ describe('threads', () => {
                 },
             },
             counts: {},
-            countsIncludingDirect: {},
         });
 
         const nextState = threadsReducer(state, {
@@ -339,7 +272,6 @@ describe('threads', () => {
                 },
             },
             counts: {},
-            countsIncludingDirect: {},
         });
 
         const nextState = threadsReducer(state, {
@@ -352,7 +284,6 @@ describe('threads', () => {
         expect(nextState.threadsInTeam.a).toEqual(['t1', 't2']);
         expect(nextState.unreadThreadsInTeam.a).toEqual(['t1', 't2']);
     });
-
     test('LEAVE_CHANNEL should remove threads that belong to that channel', () => {
         const state = deepFreeze({
             threadsInTeam: {
@@ -425,18 +356,6 @@ describe('threads', () => {
                     total_unread_mentions: 0,
                 },
             },
-            countsIncludingDirect: {
-                a: {
-                    total: 3,
-                    total_unread_threads: 3,
-                    total_unread_mentions: 2,
-                },
-                b: {
-                    total: 3,
-                    total_unread_threads: 2,
-                    total_unread_mentions: 0,
-                },
-            },
         });
 
         const nextState = threadsReducer(state, {
@@ -462,14 +381,7 @@ describe('threads', () => {
             total_unread_mentions: 0,
         });
 
-        expect(nextState.countsIncludingDirect.a).toEqual({
-            total: 1,
-            total_unread_threads: 1,
-            total_unread_mentions: 0,
-        });
-
         expect(nextState.threadsInTeam.b).toBe(state.threadsInTeam.b);
         expect(nextState.counts.b).toBe(state.counts.b);
-        expect(nextState.countsIncludingDirect.b).toBe(state.countsIncludingDirect.b);
     });
 });

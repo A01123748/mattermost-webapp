@@ -15,15 +15,12 @@ import {PreferenceType} from 'mattermost-redux/types/preferences';
 import {Preferences} from 'utils/constants';
 import {ProductComponent} from '../../../../../types/store/plugins';
 
-import {getAnnouncementBarCount} from 'selectors/views/announcement_bar';
-
 import ProductMenuTip from './product_menu_tip';
 
 export type StateProps = {
     currentUserId: string;
     products: ProductComponent[];
     step: number;
-    isAnnouncementBarOpen: boolean;
 }
 
 export type DispatchProps = {
@@ -40,12 +37,10 @@ function mapStateToProps(state: GlobalState) {
     const currentUserId = getCurrentUserId(state);
     const step: number = getInt(state, Preferences.TUTORIAL_STEP, currentUserId, 0);
     const products = state.plugins.components.Product;
-    const isAnnouncementBarOpen = getAnnouncementBarCount(state) > 0;
     return {
         currentUserId,
         products,
         step,
-        isAnnouncementBarOpen,
     };
 }
 

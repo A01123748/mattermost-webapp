@@ -5,17 +5,17 @@ import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Modal, Button} from 'react-bootstrap';
 import {FormattedMessage, useIntl} from 'react-intl';
+import {useHistory} from 'react-router-dom';
 
 import {isModalOpen} from 'selectors/views/modals';
 import {GlobalState} from 'mattermost-redux/types/store';
 import {ModalIdentifiers} from 'utils/constants';
-import {closeModal, openModal} from 'actions/views/modals';
+import {closeModal} from 'actions/views/modals';
 import {getLicenseConfig} from 'mattermost-redux/actions/general';
 import {requestTrialLicense} from 'actions/admin_actions';
 import {getStandardAnalytics} from 'mattermost-redux/actions/admin';
 import {DispatchFunc} from 'mattermost-redux/types/actions';
 import FormattedMarkdownMessage from 'components/formatted_markdown_message';
-import TrialBenefitsModal from 'components/trial_benefits_modal/trial_benefits_modal';
 
 import StartTrialModalSvg from './start_trial_modal_svg';
 
@@ -29,7 +29,7 @@ enum TrialLoadStatus {
 }
 
 type Props = {
-    onClose?: (() => void) | null;
+    onClose?: () => void;
 }
 
 function StartTrialModal(props: Props): JSX.Element | null {
@@ -41,16 +41,9 @@ function StartTrialModal(props: Props): JSX.Element | null {
     }, []);
 
     const {formatMessage} = useIntl();
+    const history = useHistory();
     const show = useSelector((state: GlobalState) => isModalOpen(state, ModalIdentifiers.START_TRIAL_MODAL));
     const stats = useSelector((state: GlobalState) => state.entities.admin.analytics);
-
-    const openTrialBenefitsModal = async () => {
-        await dispatch(openModal({
-            modalId: ModalIdentifiers.TRIAL_BENEFITS_MODAL,
-            dialogType: TrialBenefitsModal,
-            dialogProps: {trialJustStarted: true},
-        }));
-    };
 
     const requestLicense = async () => {
         setLoadStatus(TrialLoadStatus.Started);
@@ -66,8 +59,8 @@ function StartTrialModal(props: Props): JSX.Element | null {
 
         setLoadStatus(TrialLoadStatus.Success);
         await dispatch(getLicenseConfig());
-        await dispatch(closeModal(ModalIdentifiers.START_TRIAL_MODAL));
-        openTrialBenefitsModal();
+        dispatch(closeModal(ModalIdentifiers.START_TRIAL_MODAL));
+        history.push('/admin_console/about/license');
     };
 
     const btnText = (status: TrialLoadStatus): string => {
@@ -114,13 +107,13 @@ function StartTrialModal(props: Props): JSX.Element | null {
                 <div className='description'>
                     <FormattedMessage
                         id='start_trial.modal_body'
-                        defaultMessage='Access all platform features including advanced security and enterprise compliance.'
+                        defaultMessage='Start Enterprise for free to try advanced security and compliance features with premium support.'
                     />
                 </div>
                 <div className='buttons'>
                     <Button
                         className='dismiss-btn'
-                        onClick={handleOnClose}
+                        onClick={() => dispatch(closeModal(ModalIdentifiers.START_TRIAL_MODAL))}
                     >
                         <FormattedMessage
                             id='start_trial.modal_btn.nottnow'
@@ -138,7 +131,7 @@ function StartTrialModal(props: Props): JSX.Element | null {
                     <span>
                         <FormattedMarkdownMessage
                             id='start_trial.modal.disclaimer'
-                            defaultMessage='By clicking “Start 30-day trial”, I agree to the [Mattermost Software Evaluation Agreement,](!https://mattermost.com/software-evaluation-agreement) [privacy policy,](!https://about.mattermost.com/default-privacy-policy/) and receiving product emails.'
+                            defaultMessage='By clicking “Start 30-day trial”, I agree to the [Mattermost Software Evaluation Agreement, Privacy Policy,](!https://mattermost.com/software-evaluation-agreement) and receiving product emails.'
                         />
                     </span>
                 </div>

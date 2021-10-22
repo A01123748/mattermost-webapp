@@ -27,15 +27,15 @@ describe('Notifications.showNotification', () => {
         await expect(Notifications.showNotification()).rejects.toThrow('Notification.requestPermission not supported');
     });
 
-    it('should request permissions, promise style, if not previously requested, do nothing', async () => {
+    it('should request permissions, promise style, if not previously requested, handling rejection', async () => {
         window.Notification = {
             requestPermission: () => Promise.resolve('denied'),
             permission: 'denied',
         };
-        await expect(Notifications.showNotification()).resolves.toBeTruthy();
+        await expect(Notifications.showNotification()).rejects.toThrow('Notifications not granted');
     });
 
-    it('should request permissions, callback style, if not previously requested, do nothing', async () => {
+    it('should request permissions, callback style, if not previously requested, handling rejection', async () => {
         window.Notification = {
             requestPermission: (callback) => {
                 if (callback) {
@@ -44,7 +44,7 @@ describe('Notifications.showNotification', () => {
             },
             permission: 'denied',
         };
-        await expect(Notifications.showNotification()).resolves.toBeTruthy();
+        await expect(Notifications.showNotification()).rejects.toThrow('Notifications not granted');
     });
 
     it('should request permissions, promise style, if not previously requested, handling success', async () => {
@@ -105,10 +105,10 @@ describe('Notifications.showNotification', () => {
             permission: 'denied',
         };
 
-        // Call one to deny and mark as already requested, do nothing, throw nothing
-        await expect(Notifications.showNotification()).resolves.toBeTruthy();
+        // Call one to deny and mark as already requested
+        await expect(Notifications.showNotification()).rejects.toThrow('Notifications not granted');
 
         // Try again
-        await expect(Notifications.showNotification()).resolves.toBeTruthy();
+        await expect(Notifications.showNotification()).rejects.toThrow('Notifications already requested but not granted');
     });
 });

@@ -17,7 +17,7 @@ import {backToTeam, saveSetting} from './helper';
 describe('SupportSettings', () => {
     const tosLink = 'https://github.com/mattermost/platform/blob/master/README.md';
     const privacyLink = 'https://github.com/mattermost/platform/blob/master/README.md';
-    const defaultTOSLink = 'https://about.mattermost.com/default-terms/';
+    const defaultTosLink = 'https://about.mattermost.com/default-terms/';
     const defaultPrivacyLink = 'https://about.mattermost.com/default-privacy-policy/';
 
     let testTeam;
@@ -26,6 +26,8 @@ describe('SupportSettings', () => {
     before(() => {
         cy.shouldNotRunOnCloudEdition();
 
+        // # Login as admin and reset config
+        cy.apiAdminLogin();
         cy.apiGetConfig().then(({config}) => {
             siteName = config.TeamSettings.SiteName;
         });
@@ -56,7 +58,7 @@ describe('SupportSettings', () => {
         cy.uiOpenProductMenu(`About ${siteName}`);
 
         // * Verify that links do not change and they open to default pages
-        cy.get('#tosLink').should('contain', 'Terms of Service').and('have.attr', 'href').and('equal', defaultTOSLink);
+        cy.get('#tosLink').should('contain', 'Terms of Service').and('have.attr', 'href').and('equal', defaultTosLink);
         cy.get('#privacyLink').should('contain', 'Privacy Policy').and('have.attr', 'href').and('equal', defaultPrivacyLink);
     });
 
@@ -72,7 +74,7 @@ describe('SupportSettings', () => {
         cy.uiOpenProductMenu(`About ${siteName}`);
 
         // * Verify that tos link is set to default
-        cy.get('#tosLink').should('contain', 'Terms of Service').and('have.attr', 'href').and('equal', defaultTOSLink);
+        cy.get('#tosLink').should('contain', 'Terms of Service').and('have.attr', 'href').and('equal', defaultTosLink);
     });
 
     it('MM-T1035 - Customization Blank Privacy hides the link', () => {

@@ -13,44 +13,27 @@ import FormattedMarkdownMessage from 'components/formatted_markdown_message.jsx'
 
 const KeyCodes = Constants.KeyCodes;
 
-type MFAControllerState = {
-    enforceMultifactorAuthentication: boolean;
-};
-
-type Props = {
-
-    /*
-     * Object containing enforceMultifactorAuthentication
-     */
-    state: MFAControllerState;
-
-    /*
-     * Function that updates parent component with state props
-     */
-    updateParent: (state: MFAControllerState) => void;
-}
-
-export default class Confirm extends React.PureComponent<Props> {
-    public componentDidMount(): void {
+export default class Confirm extends React.PureComponent {
+    componentDidMount() {
         document.body.addEventListener('keydown', this.onKeyPress);
     }
 
-    public componentWillUnmount(): void {
+    componentWillUnmount() {
         document.body.removeEventListener('keydown', this.onKeyPress);
     }
 
-    submit = (e: KeyboardEvent | React.FormEvent<HTMLFormElement>): void => {
+    submit = (e) => {
         e.preventDefault();
         redirectUserToDefaultTeam();
     }
 
-    onKeyPress = (e: KeyboardEvent | React.FormEvent<HTMLFormElement>): void => {
+    onKeyPress = (e) => {
         if (isKeyPressed(e, KeyCodes.ENTER)) {
             this.submit(e);
         }
     }
 
-    public render(): JSX.Element {
+    render() {
         return (
             <div>
                 <form

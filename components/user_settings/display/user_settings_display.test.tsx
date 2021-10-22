@@ -86,7 +86,6 @@ describe('components/user_settings/display/UserSettingsDisplay', () => {
         globalHeaderAllowed: true,
         oneClickReactionsOnPosts: '',
         emojiPickerEnabled: true,
-        clickToReply: '',
     };
 
     test('should match snapshot, no active section', () => {
@@ -172,12 +171,6 @@ describe('components/user_settings/display/UserSettingsDisplay', () => {
             activeSection: 'theme',
             enableThemeSelection: true,
         };
-        const wrapper = shallow(<UserSettingsDisplay {...props}/>);
-        expect(wrapper).toMatchSnapshot();
-    });
-
-    test('should match snapshot, clickToReply section', () => {
-        const props = {...requiredProps, activeSection: 'click_to_reply'};
         const wrapper = shallow(<UserSettingsDisplay {...props}/>);
         expect(wrapper).toMatchSnapshot();
     });
